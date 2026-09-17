@@ -27,6 +27,10 @@ python3 scripts/cli.py <game> <cmd> [选项]
 
 选项：`--front-k/--back-k` 复式大小；`--no-fetch` 离线；`--pool {low,high}` 大乐透新固定奖档；`--fuyun` 双色球福运奖；`--rounds N`。
 
+## 数据位置
+
+包内 `data/*.csv` 是只读种子；实际 CSV/推荐/回测报告读写用户目录 `~/.lottery-exclusion-v2/`（插件更新不丢；环境变量 `LOTTERY_DATA_DIR` 可覆盖），首次运行自动种子化。
+
 ## 三条铁律
 
 1. **号码池/开奖个数/注数全部走 config.json + lotto_core，禁止写死、禁止用池大小反推选号个数**（大乐透 35 选 5，双色球 33 选 6）

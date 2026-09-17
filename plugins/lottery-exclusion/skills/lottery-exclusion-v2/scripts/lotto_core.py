@@ -8,11 +8,14 @@ from __future__ import annotations
 import csv
 import itertools
 import json
+import os
+import shutil
 from collections import Counter
 from functools import lru_cache
 from pathlib import Path
 
 import shape as shape_mod
+
 
 def _force_utf8_io():
     """Windows 管道默认 cp936, emoji/特殊字符 print 会崩, 强制 utf-8。"""
@@ -27,6 +30,23 @@ _force_utf8_io()
 
 
 SKILL_DIR = Path(__file__).parent.parent
+
+
+def user_data_dir() -> Path:
+    """可变数据目录(跨插件更新不丢): 可用环境变量 LOTTERY_DATA_DIR 覆盖,
+    否则 ~/.lottery-exclusion-v2 (Mac/Windows 均成立)。"""
+    d = Path(os.environ.get("LOTTERY_DATA_DIR") or (Path.home() / ".lottery-exclusion-v2"))
+    (d / "outputs").mkdir(parents=True, exist_ok=True)
+    (d / "backtests").mkdir(parents=True, exist_ok=True)
+    return d
+
+
+def outputs_dir() -> Path:
+    return user_data_dir() / "outputs"
+
+
+def backtests_dir() -> Path:
+    return user_data_dir() / "backtests"
 
 
 @lru_cache(maxsize=None)
@@ -44,7 +64,15 @@ def strat_config() -> dict:
 
 
 def csv_path(game: str) -> Path:
-    return SKILL_DIR / game_config(game)["data_csv"]
+    """用户数据目录下的 CSV; 首次使用时从包内种子复制 (插件更新不覆盖用户数据)。"""
+    rel = game_config(game)["data_csv"]
+    user_file = user_data_dir() / rel
+    if not user_file.exists():
+        seed = SKILL_DIR / rel
+        if seed.exists():
+            user_file.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(seed, user_file)
+    return user_file
 
 
 def read_history(game: str):

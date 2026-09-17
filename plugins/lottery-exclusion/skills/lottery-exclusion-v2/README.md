@@ -56,11 +56,13 @@ lottery-exclusion-v2/
 │   ├── fetch_data.py   # 官方接口
 │   ├── update_history.py  # CSV 全量合并重写 + doctor
 │   ├── predict.py / backtest.py
-├── data/               # 统一 5 列 CSV
-├── outputs/            # 最近推荐（对奖输入）
-├── backtests/          # 回测 json+md
+├── data/               # CSV 只读种子（首次运行复制到用户目录）
+├── outputs/            # 占位，实际推荐落在用户目录
+├── backtests/          # 占位，实际报告落在用户目录
 └── docs/               # strategy / rules / lessons_learned / data_sources
 ```
+
+可变数据（历史 CSV、推荐、回测报告）在 `~/.lottery-exclusion-v2/`（Windows 为 `C:\Users\<用户>\.lottery-exclusion-v2\`），插件更新不会覆盖；可用 `LOTTERY_DATA_DIR` 覆盖。
 
 ## 免责声明
 

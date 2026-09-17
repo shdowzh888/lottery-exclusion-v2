@@ -1,6 +1,6 @@
 {
   "name": "lottery-exclusion-v2",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "created": "2026-09-17",
   "updated": "2026-09-18",
   "strategy": "exclusion_v2",

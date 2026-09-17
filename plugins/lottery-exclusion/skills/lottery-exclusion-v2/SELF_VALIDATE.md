@@ -67,6 +67,7 @@ python3 scripts/cli.py {ssq|dlt} {fetch|predict|check|backtest|doctor}
 
 ## 版本
 
+- v2.0.1 (2026-09-18) — 可变数据重定向到 `~/.lottery-exclusion-v2`（插件更新不丢）；GitHub 市场发布
 - v2.0.0 (2026-09-17) — 修复复式奖金枚举 P0、predict/backtest 同源、对奖闭环、
-  三套奖表、多轮随机显著性、统一 CSV schema。旧版回测数字因奖金 bug 全部作废重算。
+  三套奖表、多轮随机显著性、统一 CSV schema。旧版回测数字因奖金 bug 全部作废重算
 - v1.0.0 (2026-09-17) — 初版

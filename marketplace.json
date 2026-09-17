@@ -21,12 +21,19 @@
         "en": "Chinese lottery structured picking, payout-accurate reconciliation, significance-tested backtests. Pure stdlib Python, offline-capable.",
         "zh-CN": "双色球/大乐透 v2 排除法选号、精确复式对奖与显著性回测。纯 Python 标准库，自带历史数据，离线可用。"
       },
-      "version": "2.0.0",
+      "version": "2.0.1",
       "author": {
         "name": "shdowzh888"
       },
       "category": "productivity",
-      "keywords": ["lottery", "双色球", "大乐透", "ssq", "dlt", "backtest"]
+      "keywords": [
+        "lottery",
+        "双色球",
+        "大乐透",
+        "ssq",
+        "dlt",
+        "backtest"
+      ]
     }
   ]
 }

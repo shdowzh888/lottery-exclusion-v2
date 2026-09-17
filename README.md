@@ -38,7 +38,7 @@
 
 ```
 .
-├── marketplace.json                    # 市场清单（ZCode 读取）
+├── marketplace.json                    # 市场清单（ZCode 读取，插件源必须 github+path）
 └── plugins/lottery-exclusion/
     ├── .zcode-plugin/plugin.json       # 插件清单
     ├── commands/lottery.md             # /lottery 斜杠命令
@@ -52,16 +52,24 @@
         └── docs/                       # 策略/规则/踩坑/数据源
 ```
 
+## 数据目录
+
+插件更新会替换程序文件，但历史数据不丢：首次运行自动把包内种子 CSV 复制到用户目录，之后所有 fetch/推荐/回测都读写该处：
+
+- macOS/Linux：`~/.lottery-exclusion-v2/`
+- Windows：`C:\Users\<用户>\.lottery-exclusion-v2\`
+- 可用环境变量 `LOTTERY_DATA_DIR` 覆盖
+
 ## 更新发布（开发者）
 
-本机 `~/.agents/skills/lottery-exclusion-v2` 是开发副本，发布前同步：
+技能本体就在仓库 `plugins/lottery-exclusion/skills/lottery-exclusion-v2/` 内，直接在这份上改（CLI 路径相对自身，可独立运行）。发布三步：
 
 ```bash
-./sync.sh                 # macOS；Windows 手动复制或写个等价 ps1
+# 1. 三处版本号一起 bump（技能 _meta.json、plugin.json、marketplace.json）
+# 2. 提交推送
 git add -A && git commit -m "..." && git push
+# 3. 各设备在插件管理 Discover 刷新市场 → 更新插件（客户端按 version 识别更新）
 ```
-
-推送后，各设备在插件管理里刷新市场即可更新（directory 类型市场以仓库内容为准）。
 
 ## 跨平台说明
 

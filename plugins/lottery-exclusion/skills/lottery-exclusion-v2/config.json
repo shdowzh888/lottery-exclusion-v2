@@ -172,7 +172,6 @@
     "seg_count": 4,
     "random_seed": 42,
     "random_rounds": 100,
-    "report_dir": "backtests/",
     "default_target_bet": {
       "ssq": {"front_k": 7, "back_k": 2, "cost": 28},
       "dlt": {"front_k": 7, "back_k": 2, "cost": 42}

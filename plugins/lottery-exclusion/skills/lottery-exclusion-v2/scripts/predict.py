@@ -69,8 +69,7 @@ def predict(game: str, front_k: int | None = None, back_k: int | None = None,
         "n_new": n_new,
         "created_at": datetime.now().isoformat(timespec="seconds"),
     }
-    out_dir = core.SKILL_DIR / "outputs"
-    out_dir.mkdir(exist_ok=True)
+    out_dir = core.outputs_dir()
     (out_dir / f"{game}_latest.json").write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
     return result

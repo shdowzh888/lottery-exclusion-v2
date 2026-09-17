@@ -223,8 +223,7 @@ def format_report(r: dict) -> str:
 
 
 def save_report(r: dict) -> tuple[Path, Path]:
-    out_dir = core.SKILL_DIR / core.load_config()["backtest"]["report_dir"]
-    out_dir.mkdir(exist_ok=True)
+    out_dir = core.backtests_dir()
     ts = datetime.now().strftime("%Y%m%d_%H%M")
     jp = out_dir / f"{r['game']}_v2_{ts}.json"
     mp = out_dir / f"{r['game']}_v2_{ts}.md"

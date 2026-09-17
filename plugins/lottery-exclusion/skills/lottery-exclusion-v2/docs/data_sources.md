@@ -23,9 +23,16 @@ Header: Referer: https://www.sporttery.cn/   (必须, 否则 403)
 
 统一 HTTP 行为（`fetch_data._http_get`）：UA `Mozilla/5.0`，超时 30s，失败 3 次退避 2/5/8s，3 次均败抛 RuntimeError。
 
-## 二、CSV 历史（v2 统一 5 列 schema）
+## 二、数据存放（插件更新不丢数据）
 
-路径 `data/{ssq,dlt}.csv`，两彩种同列名：
+- 包内 `data/*.csv` 是**只读种子**（发布时的历史快照）
+- 实际读写都在用户目录 `~/.lottery-exclusion-v2/`（Windows: `C:\Users\<用户>\.lottery-exclusion-v2\`），
+  首次运行自动从种子复制；可用环境变量 `LOTTERY_DATA_DIR` 覆盖
+- 结构：`data/{ssq,dlt}.csv`、`outputs/`、`backtests/`
+
+## 三、CSV 历史（v2 统一 5 列 schema）
+
+两彩种同列名：
 
 ```
 期号,日期,前区,后区,来源
@@ -38,7 +45,7 @@ Header: Referer: https://www.sporttery.cn/   (必须, 否则 403)
 3. 读取层兼容旧文件（红球/蓝球列名、扩展列），首次写入即迁移
 4. 期号等长（ssq 7 位 / dlt 5 位），字符串排序；doctor 检查长度一致
 
-## 三、推荐与对账文件
+## 四、推荐与对账文件（均在用户数据目录）
 
 | 文件 | 内容 |
 |---|---|
@@ -47,7 +54,7 @@ Header: Referer: https://www.sporttery.cn/   (必须, 否则 403)
 
 `check` 读 outputs 推荐，fetch 最新开奖后，对基准期之后的每个新开奖期逐期结算（combo_detail 给奖级明细）。
 
-## 四、备选数据源（主接口长期不可用时人工降级）
+## 五、备选数据源（主接口长期不可用时人工降级）
 
 | 源 | URL | 说明 |
 |---|---|---|
@@ -57,7 +64,7 @@ Header: Referer: https://www.sporttery.cn/   (必须, 否则 403)
 
 未编码自动切换；predict/check 在网络失败时降级本地数据并标注 stale，不阻塞使用。
 
-## 五、数据规模（2026-09-17）
+## 六、数据规模（2026-09-17）
 
 | 彩种 | 期数 | 每次拉取 |
 |---|---|---|

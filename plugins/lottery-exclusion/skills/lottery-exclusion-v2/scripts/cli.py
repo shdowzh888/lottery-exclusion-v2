@@ -53,7 +53,7 @@ def cmd_predict(game, args):
 def cmd_check(game, args):
     """对奖: 推荐基准期之后新开的期, 逐期结算。"""
     g = core.game_config(game)
-    rec_path = core.SKILL_DIR / "outputs" / f"{game}_latest.json"
+    rec_path = core.outputs_dir() / f"{game}_latest.json"
     if not rec_path.exists():
         sys.exit(f"❌ 没有找到推荐记录 {rec_path}\n   请先运行: python3 scripts/cli.py {game} predict")
     rec = json.loads(rec_path.read_text(encoding="utf-8"))
