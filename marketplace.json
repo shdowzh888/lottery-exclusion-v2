@@ -12,7 +12,8 @@
     {
       "name": "lottery-exclusion",
       "source": {
-        "source": "directory",
+        "source": "github",
+        "repo": "shdowzh888/lottery-exclusion-v2",
         "path": "plugins/lottery-exclusion"
       },
       "description": "双色球/大乐透 v2 排除法选号、精确复式对奖与显著性回测。纯 Python 标准库，自带历史数据，离线可用。",
