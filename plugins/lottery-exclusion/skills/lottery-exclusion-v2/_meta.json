@@ -1,0 +1,27 @@
+{
+  "name": "lottery-exclusion-v2",
+  "version": "2.0.0",
+  "created": "2026-09-17",
+  "updated": "2026-09-18",
+  "strategy": "exclusion_v2",
+  "games": ["ssq", "dlt"],
+  "requires": {
+    "python_packages": [],
+    "bins": ["python3"],
+    "internet": "optional (fetch; 离线自动降级)"
+  },
+  "backtest_rounds": 100,
+  "backtest_conclusion": "no_significant_edge",
+  "verified_backtests": {
+    "ssq_7plus2": {"v2_breakeven": 12.85, "random_mean": 13.39, "z": -0.83, "significant": false, "report": "backtests/ssq_v2_*.md"},
+    "dlt_7plus2": {"v2_breakeven": 31.39, "random_mean": 30.76, "z": 0.67, "significant": false, "report": "backtests/dlt_v2_*.md"}
+  },
+  "v2_fixes": [
+    "P0 复式奖金枚举按开奖个数(K/B), 注数不变量断言",
+    "predict/backtest 共用 lotto_core 消除漂移",
+    "回测删前视回退, 形态无解跳过计数",
+    "100轮随机基线 + 95%区间 + z 值",
+    "dlt 三套奖表(旧9奖级/新低/新高)按期号切换, ssq 福运奖开关",
+    "对奖闭环 check, 统一CSV schema, 离线stale降级"
+  ]
+}

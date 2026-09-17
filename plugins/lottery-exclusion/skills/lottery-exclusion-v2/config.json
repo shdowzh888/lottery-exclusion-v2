@@ -1,0 +1,181 @@
+{
+  "_comment": "lottery-exclusion-v2 skill 配置。改这里改全 skill 行为。所有规则用字典+枚举,不要写死在代码里。",
+
+  "games": {
+    "ssq": {
+      "name_cn": "双色球",
+      "front_pool": 33,
+      "front_k": 6,
+      "back_pool": 16,
+      "back_k": 1,
+      "bet_price": 2,
+      "draw_days": ["二", "四", "日"],
+      "draw_time": "21:15",
+      "issuer": "中国福利彩票发行管理中心",
+      "fetch_url": "https://www.cwl.gov.cn/cwl_admin/front/cwlkj/search/kjxx/findDrawNotice",
+      "fetch_params": {"name": "ssq", "issueCount": 30, "pageNo": 1, "pageSize": 30, "systemType": "PC"},
+      "data_csv": "data/ssq.csv",
+      "response_format": "json_list"
+    },
+    "dlt": {
+      "name_cn": "大乐透",
+      "front_pool": 35,
+      "front_k": 5,
+      "back_pool": 12,
+      "back_k": 2,
+      "bet_price": 2,
+      "draw_days": ["一", "三", "六"],
+      "draw_time": "20:30",
+      "issuer": "国家体育总局体育彩票管理中心",
+      "fetch_url": "https://webapi.sporttery.cn/gateway/lottery/getHistoryPageListV1.qry",
+      "fetch_params": {"gameNo": "85", "provinceId": "0", "pageSize": "30", "isVerify": "1", "pageNo": "1"},
+      "fetch_referer": "https://www.sporttery.cn/",
+      "data_csv": "data/dlt.csv",
+      "response_format": "json_value_list_space"
+    }
+  },
+
+  "strategy": {
+    "exclusion_v2": {
+      "_comment": "v2 排除法核心参数。前区/后区评分同一套公式,predict 与 backtest 共用 lotto_core,不允许各写一份。",
+      "front_recent_weights": {"h30": 1.0, "h10": 0.5, "all": 0.2},
+      "back_recent_weights": {"h10": 1.0, "all": 0.2},
+      "miss_weight_per_pool": 6.0,
+      "candidate_fallback_sizes": [12, 14, 16],
+      "train_window": 500,
+      "shape_filter": {
+        "_comment": "阈值按彩种 + 号码数 n 双键索引。ssq 与 dlt 的同 n 阈值不同,禁止共用。",
+        "ssq": {
+          "k_to_odd_even": {
+            "5": ["2:3", "3:2"],
+            "6": ["3:3"],
+            "7": ["3:4", "4:3"],
+            "8": ["4:4"]
+          },
+          "sum_range": {"5": [75, 125], "6": [95, 140], "7": [100, 160], "8": [115, 180]},
+          "ac_range": {"5": [3, 6], "6": [5, 9], "7": [5, 11], "8": [6, 12]},
+          "span_range": {"5": [14, 30], "6": [15, 32], "7": [16, 32], "8": [18, 32]}
+        },
+        "dlt": {
+          "k_to_odd_even": {
+            "5": ["2:3", "3:2"],
+            "6": ["3:3"],
+            "7": ["3:4", "4:3"],
+            "8": ["4:4"]
+          },
+          "sum_range": {"5": [90, 140], "6": [95, 145], "7": [125, 185], "8": [140, 220]},
+          "ac_range": {"5": [3, 6], "6": [5, 9], "7": [6, 11], "8": [7, 13]},
+          "span_range": {"5": [15, 32], "6": [15, 32], "7": [20, 34], "8": [20, 35]}
+        }
+      }
+    }
+  },
+
+  "prize": {
+    "_comment": "奖表。ssq 固定奖; dlt 按期号分三档: 旧9奖级(<26014) / 新7奖级低奖池 / 新7奖级高奖池(>=8亿)。浮动奖用典型值, 回测中头奖概率极低不影响结论, 对奖时以官方公告为准。",
+    "ssq": {
+      "table": [
+        {"i": 6, "j": 1, "amount": 5000000, "tier": 1, "note": "一等浮动典型值"},
+        {"i": 6, "j": 0, "amount": 150000, "tier": 2, "note": "二等浮动典型值"},
+        {"i": 5, "j": 1, "amount": 3000, "tier": 3},
+        {"i": 5, "j": 0, "amount": 200, "tier": 4},
+        {"i": 4, "j": 1, "amount": 200, "tier": 4},
+        {"i": 4, "j": 0, "amount": 10, "tier": 5},
+        {"i": 3, "j": 1, "amount": 10, "tier": 5},
+        {"i": 2, "j": 1, "amount": 5, "tier": 6},
+        {"i": 1, "j": 1, "amount": 5, "tier": 6},
+        {"i": 0, "j": 1, "amount": 5, "tier": 6}
+      ],
+      "extra_rules": [
+        {
+          "name": "福运奖",
+          "i": 3,
+          "j": 0,
+          "amount": 5,
+          "default_on": false,
+          "note": "2026年2月起: 奖池>=15亿时触发, 3+0 中5元; 奖池回落<3亿停止。启停状态需人工核对官方公告, check --fuyun 显式开启, 回测不计。"
+        }
+      ]
+    },
+    "dlt": {
+      "rule_versions": [
+        {
+          "name": "old_9tier",
+          "until_issue": "26013",
+          "note": "2007上市-26013期, 9奖级。只中1个后区(0+1/1+1)也中九等5元。",
+          "table": [
+            {"i": 5, "j": 2, "amount": 5000000, "tier": 1, "note": "一等浮动典型值, 旧规单注最高500万"},
+            {"i": 5, "j": 1, "amount": 200000, "tier": 2, "note": "二等浮动典型值"},
+            {"i": 5, "j": 0, "amount": 10000, "tier": 3},
+            {"i": 4, "j": 2, "amount": 3000, "tier": 4},
+            {"i": 4, "j": 1, "amount": 300, "tier": 5},
+            {"i": 3, "j": 2, "amount": 200, "tier": 6},
+            {"i": 4, "j": 0, "amount": 100, "tier": 7},
+            {"i": 3, "j": 1, "amount": 15, "tier": 8},
+            {"i": 2, "j": 2, "amount": 15, "tier": 8},
+            {"i": 3, "j": 0, "amount": 5, "tier": 9},
+            {"i": 2, "j": 1, "amount": 5, "tier": 9},
+            {"i": 1, "j": 2, "amount": 5, "tier": 9},
+            {"i": 1, "j": 1, "amount": 5, "tier": 9},
+            {"i": 0, "j": 1, "amount": 5, "tier": 9}
+          ]
+        },
+        {
+          "name": "new_7tier_low_pool",
+          "since_issue": "26014",
+          "pool_below": 800000000,
+          "note": "26014期起(2026-02-02), 9奖级合并为7奖级, 13中奖条件。奖池<8亿固定奖档。",
+          "table": [
+            {"i": 5, "j": 2, "amount": 10000000, "tier": 1, "note": "一等浮动典型值"},
+            {"i": 5, "j": 1, "amount": 200000, "tier": 2, "note": "二等浮动典型值"},
+            {"i": 5, "j": 0, "amount": 5000, "tier": 3, "note": "5+0/4+2合并三等"},
+            {"i": 4, "j": 2, "amount": 5000, "tier": 3},
+            {"i": 4, "j": 1, "amount": 300, "tier": 4},
+            {"i": 4, "j": 0, "amount": 150, "tier": 5, "note": "4+0/3+2合并五等"},
+            {"i": 3, "j": 2, "amount": 150, "tier": 5},
+            {"i": 3, "j": 1, "amount": 15, "tier": 6},
+            {"i": 2, "j": 2, "amount": 15, "tier": 6},
+            {"i": 3, "j": 0, "amount": 5, "tier": 7},
+            {"i": 2, "j": 1, "amount": 5, "tier": 7},
+            {"i": 1, "j": 2, "amount": 5, "tier": 7},
+            {"i": 0, "j": 2, "amount": 5, "tier": 7}
+          ]
+        },
+        {
+          "name": "new_7tier_high_pool",
+          "since_issue": "26014",
+          "pool_at_least": 800000000,
+          "note": "新规奖池>=8亿时固定奖升级: 6666/380/200/18/7。26015期起多数期适用, 对奖/回测需显式选择(--pool high), 默认 low。",
+          "table": [
+            {"i": 5, "j": 2, "amount": 10000000, "tier": 1, "note": "一等浮动典型值"},
+            {"i": 5, "j": 1, "amount": 200000, "tier": 2, "note": "二等浮动典型值"},
+            {"i": 5, "j": 0, "amount": 6666, "tier": 3},
+            {"i": 4, "j": 2, "amount": 6666, "tier": 3},
+            {"i": 4, "j": 1, "amount": 380, "tier": 4},
+            {"i": 4, "j": 0, "amount": 200, "tier": 5},
+            {"i": 3, "j": 2, "amount": 200, "tier": 5},
+            {"i": 3, "j": 1, "amount": 18, "tier": 6},
+            {"i": 2, "j": 2, "amount": 18, "tier": 6},
+            {"i": 3, "j": 0, "amount": 7, "tier": 7},
+            {"i": 2, "j": 1, "amount": 7, "tier": 7},
+            {"i": 1, "j": 2, "amount": 7, "tier": 7},
+            {"i": 0, "j": 2, "amount": 7, "tier": 7}
+          ]
+        }
+      ],
+      "promotions_note": "派奖活动(如2026-05起三至六等+50%、七等翻倍)属时效性活动, 不建表, 对奖时以官方公告为准。"
+    }
+  },
+
+  "backtest": {
+    "train_window": 500,
+    "seg_count": 4,
+    "random_seed": 42,
+    "random_rounds": 100,
+    "report_dir": "backtests/",
+    "default_target_bet": {
+      "ssq": {"front_k": 7, "back_k": 2, "cost": 28},
+      "dlt": {"front_k": 7, "back_k": 2, "cost": 42}
+    }
+  }
+}

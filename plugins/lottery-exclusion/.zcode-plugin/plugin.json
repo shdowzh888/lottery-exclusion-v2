@@ -1,0 +1,22 @@
+{
+  "name": "lottery-exclusion",
+  "version": "2.0.0",
+  "description": "双色球/大乐透 v2 排除法选号、精确复式对奖与显著性回测。纯 Python 标准库，自带历史数据，离线可用。",
+  "description_i18n": {
+    "en": "Chinese lottery (双色球/大乐透) structured number picking, payout-accurate 复式 reconciliation, and significance-tested backtests. Pure stdlib Python, offline-capable.",
+    "zh-CN": "双色球/大乐透 v2 排除法选号、精确复式对奖与显著性回测。纯 Python 标准库，自带历史数据，离线可用。"
+  },
+  "author": {
+    "name": "zhh"
+  },
+  "keywords": [
+    "lottery",
+    "双色球",
+    "大乐透",
+    "ssq",
+    "dlt",
+    "backtest"
+  ],
+  "commands": "commands",
+  "skills": "skills"
+}

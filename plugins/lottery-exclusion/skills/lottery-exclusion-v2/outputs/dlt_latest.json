@@ -1,0 +1,45 @@
+{
+  "game": "dlt",
+  "base_issue": "26106",
+  "base_date": "2026-09-16",
+  "front": [
+    3,
+    22,
+    29,
+    30,
+    32,
+    33,
+    35
+  ],
+  "back": [
+    7,
+    10
+  ],
+  "front_k": 7,
+  "back_k": 2,
+  "notes": 21,
+  "cost": 42,
+  "exclude_front": [
+    14,
+    17,
+    21,
+    25,
+    28
+  ],
+  "exclude_back": [
+    4,
+    6
+  ],
+  "front_shape": {
+    "号码数": 7,
+    "和值": 184,
+    "AC值": 11,
+    "跨度": 32,
+    "奇偶比": "4:3",
+    "尾数和": 24
+  },
+  "stale": false,
+  "fetch_error": null,
+  "n_new": 0,
+  "created_at": "2026-09-18T00:09:37"
+}

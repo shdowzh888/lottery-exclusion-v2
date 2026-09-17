@@ -1,0 +1,31 @@
+{
+  "name": "lottery-exclusion-market",
+  "description": "双色球/大乐透 v2 排除法选号、精确复式对奖与显著性回测插件市场。",
+  "description_i18n": {
+    "en": "Marketplace for the Chinese lottery exclusion-v2 plugin (picking, payout-accurate reconciliation, backtests).",
+    "zh-CN": "双色球/大乐透 v2 排除法选号、精确复式对奖与显著性回测插件市场。"
+  },
+  "owner": {
+    "name": "shdowzh888"
+  },
+  "plugins": [
+    {
+      "name": "lottery-exclusion",
+      "source": {
+        "source": "directory",
+        "path": "plugins/lottery-exclusion"
+      },
+      "description": "双色球/大乐透 v2 排除法选号、精确复式对奖与显著性回测。纯 Python 标准库，自带历史数据，离线可用。",
+      "description_i18n": {
+        "en": "Chinese lottery structured picking, payout-accurate reconciliation, significance-tested backtests. Pure stdlib Python, offline-capable.",
+        "zh-CN": "双色球/大乐透 v2 排除法选号、精确复式对奖与显著性回测。纯 Python 标准库，自带历史数据，离线可用。"
+      },
+      "version": "2.0.0",
+      "author": {
+        "name": "shdowzh888"
+      },
+      "category": "productivity",
+      "keywords": ["lottery", "双色球", "大乐透", "ssq", "dlt", "backtest"]
+    }
+  ]
+}
